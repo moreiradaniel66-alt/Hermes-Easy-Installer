@@ -1,0 +1,32 @@
+# Sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.tmp
+*.bak
+
+# Segredos e configuracoes locais
+.env
+.env.*
+config.yaml
+config.yml
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Logs e saidas locais
+*.log
+logs/
+data/
+dist/
+build/
+node_modules/
+
+# Pacotes gerados
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tgz

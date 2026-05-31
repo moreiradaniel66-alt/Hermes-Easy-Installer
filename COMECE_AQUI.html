@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes Easy Installer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #08111f;
+      --panel: #111a2b;
+      --panel-2: #172235;
+      --text: #eef4ff;
+      --muted: #aebbd6;
+      --line: #2b3955;
+      --cyan: #7dd3fc;
+      --green: #86efac;
+      --gold: #f8d87a;
+      --red: #fca5a5;
+      --shadow: 0 20px 70px rgba(0, 0, 0, 0.32);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(125, 211, 252, 0.17), transparent 31rem),
+        radial-gradient(circle at 88% 0%, rgba(248, 216, 122, 0.10), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 64px;
+    }
+
+    header {
+      display: grid;
+      gap: 14px;
+      padding: 28px 0 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    p, li { color: var(--muted); }
+
+    a { color: var(--cyan); }
+
+    code {
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #08101d;
+      color: var(--gold);
+      font-size: 0.95em;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 10px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #050a13;
+      color: var(--gold);
+    }
+
+    pre code {
+      padding: 0;
+      background: transparent;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin: 0;
+      color: #dce6ff;
+      font-size: 18px;
+    }
+
+    .notice {
+      max-width: 900px;
+      padding: 14px 16px;
+      border: 1px solid #725323;
+      border-radius: 8px;
+      background: rgba(33, 23, 6, 0.78);
+      color: #ffe7b0;
+    }
+
+    .wizard {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(17, 26, 43, 0.92);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8, 17, 31, 0.72);
+    }
+
+    .steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      min-height: 32px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: #0d1627;
+      font-size: 13px;
+    }
+
+    .pill.active {
+      color: var(--text);
+      border-color: rgba(125, 211, 252, 0.82);
+      background: rgba(125, 211, 252, 0.12);
+    }
+
+    .body {
+      padding: 22px;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .choice {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 10px;
+      width: 100%;
+      min-height: 238px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .choice:hover,
+    .choice.selected {
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+      background: #1a2940;
+    }
+
+    .choice .os-icon {
+      display: block;
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      flex: 0 0 auto;
+      filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+    }
+
+    .choice h3 {
+      min-height: 52px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(19px, 2.1vw, 24px);
+      line-height: 1.16;
+      font-weight: 800;
+    }
+
+    .choice p {
+      margin: 0;
+      max-width: 28ch;
+      color: #c7d5ee;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    button:not(.choice),
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0f1b2e;
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .text-link {
+      min-height: auto;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--cyan);
+      font: inherit;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+
+    .text-link:hover {
+      color: #b9ecff;
+    }
+
+    button.primary,
+    .button.primary {
+      border-color: rgba(125, 211, 252, 0.82);
+      background: #12314a;
+      color: #e9f8ff;
+    }
+
+    button.good,
+    .button.good {
+      border-color: rgba(134, 239, 172, 0.72);
+      background: #12311f;
+      color: #ebfff1;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+    }
+
+    .panel {
+      margin-top: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(8, 17, 31, 0.72);
+    }
+
+    .panel.accent {
+      border-color: rgba(125, 211, 252, 0.45);
+      background: rgba(12, 31, 49, 0.72);
+    }
+
+    .doc-view {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(8, 17, 31, 0.72);
+    }
+
+    .doc-view h3 {
+      margin-top: 20px;
+      color: var(--cyan);
+    }
+
+    .doc-view h3:first-child {
+      margin-top: 0;
+    }
+
+    .doc-view p {
+      margin: 8px 0;
+    }
+
+    .doc-view ol,
+    .doc-view ul {
+      margin: 8px 0 0;
+      padding-left: 22px;
+    }
+
+    .small-note {
+      margin: 8px 0 0;
+      color: #d6e3fb;
+      font-size: 14px;
+    }
+
+    .next-list {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .mini-steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .mini-step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(15, 27, 46, 0.72);
+    }
+
+    .mini-step-number {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #12314a;
+      color: #e9f8ff;
+      font-weight: 800;
+    }
+
+    .mini-step p {
+      margin: 0;
+    }
+
+    .status {
+      min-height: 26px;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .muted { color: var(--muted); }
+    .gold { color: var(--gold); }
+    .red { color: var(--red); }
+
+    footer {
+      padding-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .brand-mark {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: #dce6ff;
+      font-size: 14px;
+    }
+
+    .brand-mark strong {
+      color: var(--text);
+    }
+
+    @media (max-width: 820px) {
+      main { width: min(100% - 22px, 1120px); padding-top: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .choice { min-height: 0; }
+      .choice h3 { min-height: 0; }
+      .body { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">Hermes Easy Installer</div>
+      <h1>Instale o Hermes Agent sem decorar comandos.</h1>
+      <p class="lead">Escolha seu sistema, clique para iniciar o instalador e siga os próximos passos na tela. Tudo aqui é HTML puro: não precisa de Node, npm, Vite ou servidor local.</p>
+      <div class="notice"><strong>Aviso honesto:</strong> esta página é um guia visual. Para executar de verdade, use o instalador do seu sistema na pasta principal. No Windows, o instalador abre um mini-app nativo com botão real de instalação.</div>
+    </header>
+
+    <section class="wizard" aria-label="Assistente de instalação">
+      <div class="topbar">
+        <div class="steps" aria-label="Etapas">
+          <span class="pill active" id="pill-1">1. Sistema</span>
+          <span class="pill" id="pill-2">2. Instalar</span>
+          <span class="pill" id="pill-3">3. Modelo</span>
+          <span class="pill" id="pill-4">4. Telegram</span>
+        </div>
+        <button type="button" id="resetBtn">Recomeçar</button>
+      </div>
+
+      <div class="body">
+        <section class="screen active" id="screen-os">
+          <h2>Qual sistema você está usando?</h2>
+          <p class="muted">Clique no sistema deste computador. Se o guia sugerir o sistema errado, escolha manualmente.</p>
+
+          <div class="grid">
+            <button type="button" class="choice" data-os="windows">
+              <img class="os-icon" src="_motor/assets/windows.png" alt="" aria-hidden="true">
+              <h3>Windows</h3>
+              <p>Use se você está no Windows 10 ou 11.</p>
+            </button>
+            <button type="button" class="choice" data-os="macos">
+              <img class="os-icon" src="_motor/assets/macos.png" alt="" aria-hidden="true">
+              <h3>macOS</h3>
+              <p>Use se você está em MacBook, iMac ou Mac mini.</p>
+            </button>
+            <button type="button" class="choice" data-os="linux">
+              <img class="os-icon" src="_motor/assets/linux.png" alt="" aria-hidden="true">
+              <h3>Linux, WSL2 ou Termux</h3>
+              <p>Use para Linux, Ubuntu no WSL2 ou Termux no Android.</p>
+            </button>
+          </div>
+
+          <div class="status" id="detectStatus"></div>
+          <div class="actions">
+            <button type="button" class="primary" id="goInstallBtn" disabled>Continuar</button>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-install">
+          <h2 id="installTitle">Preparar instalação</h2>
+          <p id="installIntro" class="muted"></p>
+
+          <div class="panel">
+            <h3>Iniciar o instalador</h3>
+            <p>Escolha um dos dois jeitos abaixo. O primeiro é o mais fácil.</p>
+            <div class="mini-steps">
+              <div class="mini-step">
+                <span class="mini-step-number">1</span>
+                <p id="manualInstallerText"></p>
+              </div>
+              <div class="mini-step">
+                <span class="mini-step-number">2</span>
+                <p>Se preferir pelo terminal, clique em <strong>Copiar comando</strong>, abra o PowerShell/Terminal, cole o comando e pressione <strong>Enter</strong>.</p>
+              </div>
+              <div class="mini-step">
+                <span class="mini-step-number">3</span>
+                <p>Aguarde a janela terminar. Se aparecer alguma pergunta, responda com calma seguindo a tela.</p>
+              </div>
+            </div>
+            <pre><code id="installCommand"></code></pre>
+            <div class="actions">
+              <button type="button" class="primary" id="copyInstallBtn">Copiar comando</button>
+            </div>
+            <div class="status" id="copyStatus"></div>
+          </div>
+
+          <div class="panel">
+            <h3>Depois que terminar</h3>
+            <ol class="next-list" id="afterInstallList"></ol>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="backToOsBtn">Voltar</button>
+            <button type="button" class="good" id="goModelBtn">Já instalei, continuar</button>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-model">
+          <h2>Configurar modelo ou API key</h2>
+          <p class="muted">O Hermes precisa de um provedor/modelo para responder. O instalador normalmente abre essa etapa sozinho, mas você pode fazer manualmente.</p>
+
+          <div class="panel">
+            <h3>1. Abrir configuração do modelo</h3>
+            <div class="mini-steps">
+              <div class="mini-step">
+                <span class="mini-step-number">1</span>
+                <p><strong>No Windows:</strong> abra o PowerShell. <strong>No macOS/Linux:</strong> abra o Terminal.</p>
+              </div>
+              <div class="mini-step">
+                <span class="mini-step-number">2</span>
+                <p>Clique em <strong>Copiar comando</strong>, cole no PowerShell/Terminal e pressione <strong>Enter</strong>.</p>
+              </div>
+              <div class="mini-step">
+                <span class="mini-step-number">3</span>
+                <p>Quando o assistente abrir, escolha seu provedor/modelo e cole sua API key se ele pedir.</p>
+              </div>
+            </div>
+            <pre><code>hermes model</code></pre>
+            <div class="actions">
+              <button type="button" data-copy="hermes model">Copiar comando</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>2. Testar antes do Telegram</h3>
+            <p>No mesmo PowerShell/Terminal, cole este comando e pressione <strong>Enter</strong>:</p>
+            <pre><code>hermes</code></pre>
+            <p>Quando a conversa abrir, envie esta mensagem de teste:</p>
+            <pre><code>Oi, Hermes. Responda apenas: instalação funcionando.</code></pre>
+            <p class="small-note">Só clique em <strong>Hermes respondeu, configurar Telegram</strong> depois que ele responder essa mensagem.</p>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="backToInstallBtn">Voltar</button>
+            <button type="button" class="good" id="goTelegramBtn">Hermes respondeu, configurar Telegram</button>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-telegram">
+          <h2>Conectar ao Telegram</h2>
+          <p class="muted">Faça esta parte só depois que o Hermes respondeu no terminal.</p>
+
+          <div class="panel">
+            <h3>1. Crie o bot</h3>
+            <ol class="next-list">
+              <li>Abra o Telegram e procure por <code>@BotFather</code>.</li>
+              <li>Envie <code>/newbot</code>.</li>
+              <li>Escolha um nome, por exemplo <code>Meu Hermes Pessoal</code>.</li>
+              <li>Escolha um username terminado em <code>bot</code>, por exemplo <code>meu_hermes_bot</code>.</li>
+              <li>Copie o token que o BotFather entregar.</li>
+            </ol>
+            <p class="gold"><strong>Guarde esse token como senha.</strong> Não publique em grupo, print ou repositório.</p>
+          </div>
+
+          <div class="panel">
+            <h3>2. Pegue seu ID numérico</h3>
+            <p>No Telegram, procure pelo <strong>bot auxiliar</strong> <code>@userinfobot</code>. Ele não é o seu bot Hermes; ele serve só para mostrar seu ID numérico. Envie <code>/start</code> e copie o número. Se não funcionar, tente <code>@get_id_bot</code>.</p>
+          </div>
+
+          <div class="panel">
+            <h3>3. Configure o gateway</h3>
+            <p><strong>No Windows:</strong> abra o PowerShell. No macOS/Linux: abra o Terminal. Depois copie o comando abaixo, cole lá e pressione <strong>Enter</strong>.</p>
+            <pre><code>hermes gateway setup</code></pre>
+            <p>Quando o assistente abrir, escolha <strong>Telegram</strong>, cole o token do BotFather e depois cole seu ID numérico como usuário autorizado.</p>
+            <div class="actions">
+              <button type="button" data-copy="hermes gateway setup">Copiar comando</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>4. Inicie e teste</h3>
+            <p>No mesmo PowerShell/Terminal, copie o comando abaixo, cole e pressione <strong>Enter</strong>.</p>
+            <pre><code>hermes gateway start</code></pre>
+            <p>Se não funcionar no seu sistema, tente:</p>
+            <pre><code>hermes gateway
+hermes gateway run</code></pre>
+            <p>Abra seu bot no Telegram, envie <code>/start</code> e depois:</p>
+            <pre><code>Oi, Hermes. Você está conectado?</code></pre>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="backToModelBtn">Voltar</button>
+            <a class="button" href="Documentacao/GUIA_TELEGRAM.md">Abrir guia completo do Telegram</a>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-doc">
+          <h2 id="docTitle">Documentação</h2>
+          <p class="muted" id="docIntro"></p>
+          <div class="doc-view" id="docContent"></div>
+          <div class="actions">
+            <button type="button" id="backFromDocBtn">Voltar ao início</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <footer>
+      <p>Documentação completa:
+        <button type="button" class="text-link" data-doc="windows">Windows</button>,
+        <button type="button" class="text-link" data-doc="macos">macOS</button>,
+        <button type="button" class="text-link" data-doc="linux">Linux</button>,
+        <button type="button" class="text-link" data-doc="telegram">Telegram</button>
+        e <button type="button" class="text-link" data-doc="troubleshooting">solução de problemas</button>.
+      </p>
+      <p class="brand-mark">Desenvolvido por <strong>Daniel Moreira</strong> · Instagram <strong>@moreiraprodux</strong></p>
+    </footer>
+  </main>
+
+  <script>
+    const osData = {
+      windows: {
+        label: "Windows",
+        installer: "INSTALAR_WINDOWS.bat",
+        command: ".\\INSTALAR_WINDOWS.bat",
+        intro: "Você escolheu Windows. Volte para a pasta principal e dê dois cliques em INSTALAR_WINDOWS.bat. Ele abre um mini-app nativo que executa o instalador de verdade.",
+        after: [
+          "Aguarde a janela do PowerShell terminar.",
+          "Abra um PowerShell novo.",
+          "Rode: hermes",
+          "Se o Hermes pedir modelo/API key, siga a etapa seguinte."
+        ]
+      },
+      macos: {
+        label: "macOS",
+        installer: "INSTALAR_MAC.command",
+        command: "chmod +x ./INSTALAR_MAC.command\n./INSTALAR_MAC.command",
+        intro: "Você escolheu macOS. Volte para a pasta principal e dê dois cliques em INSTALAR_MAC.command.",
+        after: [
+          "Se o macOS bloquear o arquivo, abra o Terminal dentro da pasta.",
+          "Rode o comando alternativo mostrado nesta tela.",
+          "Feche e abra o Terminal.",
+          "Rode: hermes"
+        ]
+      },
+      linux: {
+        label: "Linux / WSL2 / Termux",
+        installer: "INSTALAR_LINUX.sh",
+        command: "chmod +x ./INSTALAR_LINUX.sh\n./INSTALAR_LINUX.sh",
+        intro: "Você escolheu Linux, WSL2 ou Termux. Abra o terminal na pasta principal e rode INSTALAR_LINUX.sh.",
+        after: [
+          "Feche e abra o terminal, ou rode: source ~/.bashrc",
+          "Rode: hermes",
+          "Se estiver no WSL2 e o gateway não ficar rodando depois, use: hermes gateway run"
+        ]
+      }
+    };
+
+    let selectedOs = "";
+
+    const screens = {
+      os: document.getElementById("screen-os"),
+      install: document.getElementById("screen-install"),
+      model: document.getElementById("screen-model"),
+      telegram: document.getElementById("screen-telegram")
+      ,doc: document.getElementById("screen-doc")
+    };
+
+    const pills = {
+      os: document.getElementById("pill-1"),
+      install: document.getElementById("pill-2"),
+      model: document.getElementById("pill-3"),
+      telegram: document.getElementById("pill-4")
+    };
+
+    const docs = {
+      windows: {
+        title: "Guia Windows",
+        intro: "Use este guia se você está no Windows 10 ou 11.",
+        html: `
+          <h3>1. Abra a pasta</h3>
+          <ol>
+            <li>Extraia o arquivo zip.</li>
+            <li>Abra a pasta <code>Hermes Easy Installer</code>.</li>
+            <li>Dê dois cliques em <code>INSTALAR_WINDOWS.bat</code>.</li>
+          </ol>
+          <h3>2. Instale</h3>
+          <p>O arquivo abre um assistente Windows nativo. Clique em <strong>Instalar Hermes no Windows</strong>.</p>
+          <h3>3. Teste</h3>
+          <p>Quando terminar, abra um PowerShell novo e rode:</p>
+          <pre><code>hermes</code></pre>
+          <h3>4. Modelo/API key</h3>
+          <p>No Windows, abra o PowerShell. No macOS/Linux, abra o Terminal. Cole este comando e pressione Enter:</p>
+          <pre><code>hermes model</code></pre>
+          <p>Quando o assistente abrir, escolha seu provedor/modelo e cole sua API key se ele pedir.</p>
+        `
+      },
+      macos: {
+        title: "Guia macOS",
+        intro: "Use este guia para MacBook, iMac ou Mac mini.",
+        html: `
+          <h3>1. Abra a pasta</h3>
+          <p>Extraia o zip e abra a pasta <code>Hermes Easy Installer</code>.</p>
+          <h3>2. Instale</h3>
+          <p>Dê dois cliques em <code>INSTALAR_MAC.command</code>.</p>
+          <p>Se o macOS bloquear, abra o Terminal na pasta e rode:</p>
+          <pre><code>chmod +x ./INSTALAR_MAC.command
+./INSTALAR_MAC.command</code></pre>
+          <h3>3. Teste</h3>
+          <pre><code>hermes</code></pre>
+        `
+      },
+      linux: {
+        title: "Guia Linux, WSL2 ou Termux",
+        intro: "Use este guia para Linux, Ubuntu no WSL2 ou Termux.",
+        html: `
+          <h3>1. Abra o terminal</h3>
+          <p>Entre na pasta <code>Hermes Easy Installer</code>.</p>
+          <h3>2. Instale</h3>
+          <pre><code>chmod +x ./INSTALAR_LINUX.sh
+./INSTALAR_LINUX.sh</code></pre>
+          <h3>3. Teste</h3>
+          <p>Abra um terminal novo ou rode <code>source ~/.bashrc</code>. Depois:</p>
+          <pre><code>hermes</code></pre>
+        `
+      },
+      telegram: {
+        title: "Guia Telegram",
+        intro: "Configure esta parte só depois que o Hermes responder no terminal.",
+        html: `
+          <h3>1. Crie o bot</h3>
+          <ol>
+            <li>No Telegram, procure por <code>@BotFather</code>.</li>
+            <li>Envie <code>/newbot</code>.</li>
+            <li>Escolha um nome, por exemplo <code>Meu Hermes Pessoal</code>.</li>
+            <li>Escolha um username terminado em <code>bot</code>.</li>
+            <li>Copie o token.</li>
+          </ol>
+          <h3>2. Pegue seu ID numérico</h3>
+          <p>Procure pelo <strong>bot auxiliar</strong> <code>@userinfobot</code>. Ele não é o bot que você acabou de criar; ele só mostra seu ID numérico. Envie <code>/start</code> e copie o número.</p>
+          <h3>3. Conecte no Hermes</h3>
+          <p>No Windows, abra o PowerShell. No macOS/Linux, abra o Terminal. Cole este comando e pressione Enter:</p>
+          <pre><code>hermes gateway setup</code></pre>
+          <p>Quando o assistente abrir, escolha Telegram, cole o token do BotFather e depois cole seu ID numérico como usuário autorizado.</p>
+          <h3>4. Inicie</h3>
+          <p>No mesmo PowerShell/Terminal, cole este comando e pressione Enter:</p>
+          <pre><code>hermes gateway start</code></pre>
+          <p>Se não funcionar, tente <code>hermes gateway</code> ou <code>hermes gateway run</code>.</p>
+        `
+      },
+      troubleshooting: {
+        title: "Solução de problemas",
+        intro: "Aqui estão os problemas mais comuns.",
+        html: `
+          <h3><code>hermes</code> não é reconhecido</h3>
+          <p>Abra um terminal novo. No Linux/macOS/WSL2, rode <code>source ~/.bashrc</code>.</p>
+          <h3>O Hermes instalou, mas não conversa</h3>
+          <pre><code>hermes model</code></pre>
+          <h3>O Telegram não responde</h3>
+          <pre><code>hermes gateway status
+hermes gateway start</code></pre>
+          <p>No WSL2, use <code>hermes gateway run</code> e deixe o terminal aberto.</p>
+          <h3>Token vazou</h3>
+          <p>Volte ao <code>@BotFather</code>, gere outro token e rode <code>hermes gateway setup</code> novamente.</p>
+        `
+      }
+    };
+
+    function showScreen(name) {
+      Object.values(screens).forEach(screen => screen.classList.remove("active"));
+      Object.values(pills).forEach(pill => pill.classList.remove("active"));
+      screens[name].classList.add("active");
+
+      const order = ["os", "install", "model", "telegram"];
+      const index = order.indexOf(name);
+      order.forEach((key, idx) => {
+        if (idx <= index) pills[key].classList.add("active");
+      });
+    }
+
+    function detectOs() {
+      const text = (navigator.userAgent || navigator.platform || "").toLowerCase();
+      if (text.includes("win")) return "windows";
+      if (text.includes("mac")) return "macos";
+      if (text.includes("linux") || text.includes("android")) return "linux";
+      return "";
+    }
+
+    function getLocalRootPath() {
+      if (location.protocol !== "file:") return "";
+      let path = decodeURIComponent(location.pathname);
+      if (/^\/[A-Za-z]:\//.test(path)) path = path.slice(1);
+      path = path.replace(/\/COMECE_AQUI\.html$/i, "");
+      return path;
+    }
+
+    function toWindowsPath(path) {
+      return path.replace(/\//g, "\\");
+    }
+
+    function quote(value) {
+      return '"' + value.replace(/"/g, '\\"') + '"';
+    }
+
+    function buildInstallCommand(data) {
+      const root = getLocalRootPath();
+      if (!root) return data.command;
+      if (selectedOs === "windows") return "& " + quote(toWindowsPath(root + "/" + data.installer));
+      return "cd " + quote(root) + "\n" + data.command;
+    }
+
+    function selectOs(os) {
+      selectedOs = os;
+      document.querySelectorAll(".choice").forEach(btn => {
+        btn.classList.toggle("selected", btn.dataset.os === os);
+      });
+      document.getElementById("goInstallBtn").disabled = false;
+      document.getElementById("detectStatus").textContent = "Selecionado: " + osData[os].label;
+    }
+
+    function fillInstallScreen() {
+      const data = osData[selectedOs];
+      document.getElementById("installTitle").textContent = "Instalar no " + data.label;
+      document.getElementById("installIntro").textContent = data.intro;
+      document.getElementById("manualInstallerText").innerHTML = "Na pasta principal, procure e dê dois cliques em <code>" + data.installer + "</code>.";
+      document.getElementById("installCommand").textContent = buildInstallCommand(data);
+      const list = document.getElementById("afterInstallList");
+      list.innerHTML = "";
+      data.after.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.appendChild(li);
+      });
+      document.getElementById("copyStatus").textContent = "";
+    }
+
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (_) {}
+
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (_) { ok = false; }
+      document.body.removeChild(area);
+      return ok;
+    }
+
+    document.querySelectorAll(".choice").forEach(btn => {
+      btn.addEventListener("click", () => selectOs(btn.dataset.os));
+    });
+
+    document.getElementById("goInstallBtn").addEventListener("click", () => {
+      if (!selectedOs) return;
+      fillInstallScreen();
+      showScreen("install");
+    });
+
+    document.getElementById("copyInstallBtn").addEventListener("click", async () => {
+      const ok = await copyText(document.getElementById("installCommand").textContent);
+      document.getElementById("copyStatus").textContent = ok ? "Comando do instalador copiado." : "Não consegui copiar automaticamente. Selecione o comando acima e copie manualmente.";
+    });
+
+    document.querySelectorAll("[data-copy]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const ok = await copyText(btn.dataset.copy);
+        btn.textContent = ok ? "Copiado" : "Copie manualmente";
+        window.setTimeout(() => { btn.textContent = "Copiar comando"; }, 1600);
+      });
+    });
+
+    document.querySelectorAll("[data-doc]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const doc = docs[btn.dataset.doc];
+        document.getElementById("docTitle").textContent = doc.title;
+        document.getElementById("docIntro").textContent = doc.intro;
+        document.getElementById("docContent").innerHTML = doc.html;
+        showScreen("doc");
+        window.scrollTo({ top: document.querySelector(".wizard").offsetTop, behavior: "smooth" });
+      });
+    });
+
+    document.getElementById("backToOsBtn").addEventListener("click", () => showScreen("os"));
+    document.getElementById("backToInstallBtn").addEventListener("click", () => showScreen("install"));
+    document.getElementById("backToModelBtn").addEventListener("click", () => showScreen("model"));
+    document.getElementById("backFromDocBtn").addEventListener("click", () => showScreen("os"));
+    document.getElementById("goModelBtn").addEventListener("click", () => showScreen("model"));
+    document.getElementById("goTelegramBtn").addEventListener("click", () => showScreen("telegram"));
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      selectedOs = "";
+      document.querySelectorAll(".choice").forEach(btn => btn.classList.remove("selected"));
+      document.getElementById("goInstallBtn").disabled = true;
+      document.getElementById("detectStatus").textContent = "";
+      showScreen("os");
+    });
+
+    const detected = detectOs();
+    if (detected) {
+      selectOs(detected);
+      document.getElementById("detectStatus").textContent = "Parece que você está em " + osData[detected].label + ". Se estiver errado, escolha outro.";
+    }
+  </script>
+</body>
+</html>

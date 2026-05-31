@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Hermes Easy Installer - Windows</title>
+  <hta:application
+    id="HermesEasyInstaller"
+    applicationname="Hermes Easy Installer"
+    border="thin"
+    caption="yes"
+    maximizebutton="yes"
+    minimizebutton="yes"
+    scroll="yes"
+    singleinstance="yes"
+    sysmenu="yes"
+    windowstate="normal">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #08111f;
+      color: #eef4ff;
+    }
+    main {
+      width: 860px;
+      max-width: calc(100% - 48px);
+      margin: 0 auto;
+      padding: 34px 0 44px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 42px;
+      line-height: 1.08;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+    p, li {
+      color: #c8d6ee;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+    .panel {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid #2b3955;
+      border-radius: 8px;
+      background: #111a2b;
+    }
+    button {
+      min-height: 48px;
+      padding: 10px 18px;
+      border: 1px solid #7dd3fc;
+      border-radius: 8px;
+      background: #12314a;
+      color: #eefaff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.secondary {
+      border-color: #2b3955;
+      background: #0f1b2e;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .status {
+      margin-top: 14px;
+      color: #86efac;
+      font-weight: 700;
+    }
+    .brand-mark {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid #2b3955;
+      color: #c8d6ee;
+      font-size: 14px;
+    }
+    .brand-mark strong {
+      color: #eef4ff;
+    }
+    code {
+      color: #f8d87a;
+      background: #050a13;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+  </style>
+  <script>
+    function shell() {
+      return new ActiveXObject("WScript.Shell");
+    }
+
+    function runInstaller() {
+      var sh = shell();
+      var path = document.location.pathname;
+      path = decodeURIComponent(path);
+      if (path.charAt(0) === "/" && path.charAt(2) === ":") path = path.substring(1);
+      path = path.replace(/\//g, "\\");
+      var folder = path.substring(0, path.lastIndexOf("\\"));
+      var bat = folder + "\\instalar-windows-direto.bat";
+      sh.Run('"' + bat + '"', 1, false);
+      document.getElementById("status").innerText = "Instalador aberto. Siga a janela do PowerShell.";
+    }
+
+    function openDocs() {
+      var sh = shell();
+      var path = document.location.pathname;
+      path = decodeURIComponent(path);
+      if (path.charAt(0) === "/" && path.charAt(2) === ":") path = path.substring(1);
+      path = path.replace(/\//g, "\\");
+      var folder = path.substring(0, path.lastIndexOf("\\"));
+      var docs = folder + "\\..\\Documentacao\\COMECE_AQUI.html";
+      sh.Run('"' + docs + '"', 1, false);
+    }
+  </script>
+</head>
+<body>
+  <main>
+    <h1>Hermes Easy Installer</h1>
+    <p>Este é o modo Windows nativo. Aqui o botão executa o instalador de verdade, sem depender do navegador abrir arquivos <code>.bat</code>.</p>
+
+    <div class="panel">
+      <h2>1. Instalar Hermes Agent</h2>
+      <p>Clique no botão abaixo. Uma janela do PowerShell vai abrir e baixar o instalador oficial mais recente do Hermes Agent.</p>
+      <div class="actions">
+        <button onclick="runInstaller()">Instalar Hermes no Windows</button>
+        <button class="secondary" onclick="openDocs()">Abrir guia</button>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="panel">
+      <h2>2. Depois da instalação</h2>
+      <ol>
+        <li>Abra um PowerShell novo.</li>
+        <li>Rode <code>hermes</code> para testar.</li>
+        <li>Se precisar configurar modelo/API key, rode <code>hermes model</code>.</li>
+        <li>Para Telegram, rode <code>hermes gateway setup</code> e siga o guia.</li>
+      </ol>
+    </div>
+
+    <p class="brand-mark">Desenvolvido por <strong>Daniel Moreira</strong> · Instagram <strong>@moreiraprodux</strong></p>
+  </main>
+</body>
+</html>
