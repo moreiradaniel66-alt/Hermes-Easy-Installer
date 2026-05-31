@@ -1,5 +1,7 @@
 # Hermes Easy Installer
 
+![Hermes Easy Installer](assets/hermes-easy-installer-cover.jpg)
+
 Instalador amigavel para o Hermes Agent da Nous Research, criado para reduzir atrito no primeiro setup e guiar usuarios em Windows, macOS, Linux, WSL2 e Termux.
 
 O projeto nao guarda, envia nem inclui credenciais. Ele baixa o instalador oficial mais recente do Hermes Agent, conduz o usuario pelo fluxo de instalacao e aponta para os comandos oficiais de configuracao e diagnostico.
