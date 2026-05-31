@@ -18,6 +18,7 @@ COMECE_AQUI.html      -> assistente visual na raiz da pasta
 INSTALAR_WINDOWS.bat  -> Windows, duplo clique
 INSTALAR_MAC.command  -> macOS, duplo clique quando permitido
 INSTALAR_LINUX.sh     -> Linux, WSL2 e Termux
+instalar.ps1          -> instalação direta via comando público
 Documentacao/        -> guias passo a passo
 _motor/              -> scripts internos, não precisa mexer
 ```
@@ -38,6 +39,12 @@ ABRIR_DOCUMENTACAO_NO_BLOCO_DE_NOTAS.bat -> menu Windows para abrir guias no Blo
 ```
 
 ## Instalação no Windows
+
+Comando direto para PowerShell ou CMD:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/moreiradaniel66-alt/Hermes-Easy-Installer/main/instalar.ps1 | iex"
+```
 
 Modo mais fácil: dê dois cliques em:
 
@@ -75,6 +82,12 @@ No terminal:
 ```bash
 chmod +x ./INSTALAR_LINUX.sh
 ./INSTALAR_LINUX.sh
+```
+
+Ou direto pela internet:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/moreiradaniel66-alt/Hermes-Easy-Installer/main/_motor/install-hermes-easy.sh | bash
 ```
 
 ## O que ele baixa
