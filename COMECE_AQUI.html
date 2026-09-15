@@ -1,0 +1,1597 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes Easy Installer • Nous Research (Moreira Labs)</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg-base: #02050e;
+      --bg-surface: #070c1a;
+      --bg-card: rgba(11, 19, 38, 0.75);
+      --bg-card-hover: rgba(18, 30, 58, 0.9);
+      --border-subtle: rgba(0, 245, 255, 0.15);
+      --border-accent: rgba(0, 245, 255, 0.45);
+      --border-purple: rgba(139, 92, 246, 0.45);
+      
+      /* MOREIRA LABS PALETTE: Cyber Blue, Laser Cyan, Cyber Purple */
+      --cyan-laser: #00f5ff;
+      --cyan-bright: #38bdf8;
+      --blue-cyber: #0070f3;
+      --blue-electric: #00d2ff;
+      --purple-uv: #8b5cf6;
+      --purple-deep: #7928ca;
+      --purple-indigo: #6366f1;
+      
+      --emerald-400: #34d399;
+      --emerald-500: #10b981;
+      --amber-400: #fbbf24;
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Consolas, monospace;
+      
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 12px 30px -5px rgba(0, 0, 0, 0.5);
+      --shadow-glow-cyan: 0 0 35px -5px rgba(0, 245, 255, 0.25);
+      --shadow-glow-purple: 0 0 35px -5px rgba(139, 92, 246, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(circle at 18% 12%, rgba(0, 245, 255, 0.14) 0%, transparent 42%),
+        radial-gradient(circle at 82% 16%, rgba(139, 92, 246, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 50% 88%, rgba(0, 112, 243, 0.12) 0%, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 30px 0 80px;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      padding: 20px 0 36px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo-halo {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(135deg, var(--cyan-laser), var(--blue-cyber), var(--purple-uv));
+      box-shadow: 0 0 35px rgba(0, 245, 255, 0.45), 0 0 70px rgba(139, 92, 246, 0.25);
+      animation: floatGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translateY(0); box-shadow: 0 0 30px rgba(0, 245, 255, 0.35); }
+      100% { transform: translateY(-5px); box-shadow: 0 0 45px rgba(0, 245, 255, 0.6), 0 0 80px rgba(139, 92, 246, 0.35); }
+    }
+
+    .logo-halo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .badge-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: rgba(0, 245, 255, 0.08);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      color: var(--cyan-laser);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .badge-wrap .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan-laser);
+      box-shadow: 0 0 12px var(--cyan-laser);
+      animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-size: clamp(34px, 5.5vw, 56px);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 65%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      max-width: 900px;
+      margin: 0 auto 16px;
+    }
+
+    .lead {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--text-muted);
+      max-width: 740px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .os-detect-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 22px;
+      background: rgba(11, 19, 38, 0.85);
+      border: 1px solid var(--border-accent);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--text-main);
+      box-shadow: var(--shadow-glow-cyan);
+      backdrop-filter: blur(14px);
+    }
+
+    .os-detect-banner span.os-name {
+      color: var(--cyan-laser);
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+    }
+
+    /* WIZARD CONTAINER */
+    .wizard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 22px;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      margin-top: 24px;
+      transition: border-color 0.3s ease;
+    }
+
+    /* NAVIGATION TABS */
+    .nav-steps {
+      display: flex;
+      flex-wrap: wrap;
+      background: rgba(4, 8, 20, 0.8);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 18px;
+      gap: 8px;
+    }
+
+    .step-btn {
+      flex: 1;
+      min-width: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .step-btn .num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .step-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .step-btn.active {
+      background: rgba(0, 245, 255, 0.12);
+      border-color: rgba(0, 245, 255, 0.4);
+      color: var(--cyan-laser);
+      box-shadow: 0 0 15px rgba(0, 245, 255, 0.15);
+    }
+
+    .step-btn.active .num {
+      background: var(--cyan-laser);
+      color: #02050e;
+      box-shadow: 0 0 10px var(--cyan-laser);
+    }
+
+    .step-btn.completed .num {
+      background: var(--purple-uv);
+      color: #ffffff;
+    }
+
+    /* WIZARD CONTENT */
+    .wizard-body {
+      padding: 36px;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .screen-header {
+      margin-bottom: 28px;
+    }
+
+    .screen-header h2 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .screen-header p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* OS SELECTION CARDS */
+    .os-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .os-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 26px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: left;
+      color: inherit;
+    }
+
+    .os-card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      border-color: rgba(0, 245, 255, 0.35);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .os-card.selected {
+      background: rgba(0, 112, 243, 0.12);
+      border-color: var(--cyan-laser);
+      box-shadow: 0 0 25px rgba(0, 245, 255, 0.25);
+      transform: translateY(-4px);
+    }
+
+    .os-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .os-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .os-card.selected .os-icon-wrap {
+      background: rgba(0, 245, 255, 0.2);
+      border-color: var(--cyan-laser);
+      box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+    }
+
+    .os-icon-wrap svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .check-pill {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .os-card.selected .check-pill {
+      background: var(--cyan-laser);
+      border-color: var(--cyan-laser);
+      color: #02050e;
+    }
+
+    .os-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .os-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .os-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px 10px;
+      border-radius: 8px;
+      width: fit-content;
+    }
+
+    .os-card.selected .os-badge {
+      color: var(--cyan-laser);
+      background: rgba(0, 245, 255, 0.12);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+    }
+
+    /* METHOD SELECTOR (1-Click vs Terminal) */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .method-card {
+      background: rgba(6, 12, 26, 0.65);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .method-card.primary-method {
+      border-color: rgba(0, 245, 255, 0.4);
+      background: rgba(0, 112, 243, 0.08);
+      box-shadow: 0 0 25px rgba(0, 245, 255, 0.12);
+    }
+
+    .method-card.purple-method {
+      border-color: rgba(139, 92, 246, 0.4);
+      background: rgba(121, 40, 202, 0.08);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.12);
+    }
+
+    .method-card h4 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .method-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* TERMINAL SIMULATOR */
+    .terminal-box {
+      background: #02040a;
+      border: 1px solid rgba(0, 245, 255, 0.2);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 12px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .terminal-header {
+      background: #060b18;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .terminal-dot.red { background: #f43f5e; }
+    .terminal-dot.yellow { background: #fbbf24; }
+    .terminal-dot.green { background: #10b981; }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .terminal-body {
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--cyan-laser);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .terminal-prompt {
+      color: var(--purple-uv);
+      margin-right: 8px;
+      user-select: none;
+      font-weight: 700;
+    }
+
+    /* ACTION BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan-laser), var(--blue-cyber));
+      color: #02050e;
+      box-shadow: 0 4px 20px rgba(0, 245, 255, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #38bdf8, #0070f3);
+      box-shadow: 0 6px 25px rgba(0, 245, 255, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .btn-purple {
+      background: linear-gradient(135deg, var(--purple-uv), var(--purple-deep));
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-purple:hover {
+      background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+      box-shadow: 0 6px 25px rgba(139, 92, 246, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(0, 245, 255, 0.3);
+    }
+
+    .btn-copy {
+      padding: 7px 14px;
+      font-size: 13px;
+      background: rgba(0, 245, 255, 0.08);
+      border: 1px solid rgba(0, 245, 255, 0.25);
+      border-radius: 8px;
+      color: var(--cyan-laser);
+    }
+
+    .btn-copy:hover {
+      background: rgba(0, 245, 255, 0.18);
+      color: #ffffff;
+    }
+
+    /* STEP GUIDES & LISTS */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(6, 12, 26, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+    }
+
+    .step-badge-num {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: rgba(0, 245, 255, 0.15);
+      color: var(--cyan-laser);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      border: 1px solid rgba(0, 245, 255, 0.3);
+    }
+
+    .step-info {
+      flex-grow: 1;
+    }
+
+    .step-info h4 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .step-info p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* CALLOUT BOXES */
+    .callout {
+      padding: 18px 22px;
+      border-radius: 14px;
+      font-size: 14.5px;
+      line-height: 1.6;
+      margin: 18px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .callout-cyan {
+      background: rgba(0, 245, 255, 0.08);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      color: #cffafe;
+    }
+
+    .callout-purple {
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #e9d5ff;
+    }
+
+    .callout-green {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: #a7f3d0;
+    }
+
+    .callout svg {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 14px 22px;
+      background: #070c1a;
+      border: 1px solid var(--cyan-laser);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 245, 255, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* FOOTER & CREDITS */
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .credit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 245, 255, 0.2);
+      color: var(--text-muted);
+      font-size: 13.5px;
+    }
+
+    .credit-badge strong {
+      color: var(--text-main);
+    }
+
+    .credit-badge a {
+      color: var(--cyan-laser);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .credit-badge a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .wizard-body { padding: 20px; }
+      .nav-steps { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; }
+      .step-btn { min-width: 120px; font-size: 13px; }
+      .os-grid { grid-template-columns: 1fr; }
+      .method-grid { grid-template-columns: 1fr; }
+    }
+
+    /* APP MODE BADGE & ONE-CLICK BUTTONS */
+    .app-mode-badge {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 18px;
+      margin: 0 0 20px 0;
+      border-radius: 12px;
+      background: rgba(0, 245, 255, 0.1);
+      border: 1px solid rgba(0, 245, 255, 0.35);
+      color: var(--cyan-laser);
+      font-weight: 700;
+      font-size: 13.5px;
+      letter-spacing: 0.02em;
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.15);
+      animation: pulseGlow 3s infinite alternate;
+    }
+
+    .btn-oneclick {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 12px 22px;
+      border-radius: 12px;
+      border: none;
+      margin-top: 14px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.25s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-oneclick:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.15);
+    }
+
+    .cmd-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 10px;
+    }
+
+    .cmd-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .cmd-tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .cmd-tab-btn.active {
+      background: rgba(0, 245, 255, 0.15);
+      border-color: rgba(0, 245, 255, 0.4);
+      color: var(--cyan-laser);
+      box-shadow: 0 0 10px rgba(0, 245, 255, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo-halo">
+        <img src="_motor/assets/moreira-labs-logo.jpg" alt="Moreira Labs" onerror="this.style.display='none'">
+      </div>
+
+      <div class="badge-wrap">
+        <span class="pulse"></span>
+        Hermes Agent • Nous Research (2026)
+      </div>
+      <h1>Instalação Inteligente do Hermes Agent</h1>
+      <p class="lead">Assistente autônomo da <strong>Nous Research</strong> com memória neural contínua, criação dinâmica de ferramentas e gateways multicanais.<br><span style="font-size: 14.5px; color: var(--cyan-laser); opacity: 0.9;">Interface & Automação desenvolvidas por <strong>Daniel Moreira • Moreira Labs</strong></span></p>
+      
+      <div class="os-detect-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan-laser);"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        <span>Sistema operacional detectado: <span class="os-name" id="detectedOsName">Identificando...</span></span>
+      </div>
+    </header>
+
+    <main class="wizard-card">
+      <!-- NAVIGATION TABS -->
+      <nav class="nav-steps" aria-label="Passos do Instalador">
+        <button type="button" class="step-btn active" data-step="1">
+          <span class="num">1</span>
+          <span>Sistema</span>
+        </button>
+        <button type="button" class="step-btn" data-step="2">
+          <span class="num">2</span>
+          <span>Instalação</span>
+        </button>
+        <button type="button" class="step-btn" data-step="3">
+          <span class="num">3</span>
+          <span>Web Dashboard</span>
+        </button>
+        <button type="button" class="step-btn" data-step="4">
+          <span class="num">4</span>
+          <span>Configuração</span>
+        </button>
+        <button type="button" class="step-btn" data-step="5">
+          <span class="num">5</span>
+          <span>Telegram & Apps</span>
+        </button>
+        <button type="button" class="step-btn" data-step="6">
+          <span class="num">6</span>
+          <span>Diagnóstico</span>
+        </button>
+      </nav>
+
+      <!-- WIZARD BODY -->
+      <div class="wizard-body">
+        <!-- APP MODE NOTIFICATION -->
+        <div class="app-mode-badge" id="appModeBadge">
+          <span class="pulse"></span>
+          <span>Painel Portátil Ativo • Execução Automatizada com 1-Clique Habilitada</span>
+        </div>
+
+
+        <!-- SCREEN 1: OS SELECTION -->
+        <section class="screen active" id="screen-1">
+          <div class="screen-header">
+            <h2>Selecione o seu Sistema Operacional</h2>
+            <p>Identificamos seu ambiente automaticamente. Selecione a plataforma deste computador:</p>
+          </div>
+
+          <div class="os-grid">
+            <!-- Windows -->
+            <div class="os-card" data-os="windows">
+              <div class="os-card-header">
+                <div class="os-icon-wrap">
+                  <svg viewBox="0 0 88 88" fill="none">
+                    <path d="M0 12.5L35.8 7.6V41.7H0V12.5ZM0 46.3H35.8V80.4L0 75.5V46.3ZM39.9 7.1L88 0V41.7H39.9V7.1ZM39.9 46.3H88V88L39.9 80.9V46.3Z" fill="#00f5ff"/>
+                  </svg>
+                </div>
+                <div class="check-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+              <h3>Windows</h3>
+              <p>Windows 10 ou 11 (64-bit). Inclui menu interativo `.bat`, instalador PowerShell nativo, Web Dashboard e opção para o Hermes Desktop.</p>
+              <div class="os-badge">Recomendado para este PC</div>
+            </div>
+
+            <!-- macOS -->
+            <div class="os-card" data-os="macos">
+              <div class="os-card-header">
+                <div class="os-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="#c084fc">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.88c.64-.78 1.08-1.86.96-2.95-.93.04-2.05.62-2.71 1.4-.58.67-1.09 1.76-.95 2.82 1.04.08 2.06-.5 2.7-1.27z"/>
+                  </svg>
+                </div>
+                <div class="check-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+              <h3>macOS</h3>
+              <p>Apple Silicon (M1/M2/M3/M4) e processadores Intel. Lançador direto `.command` e suporte ao Terminal zsh.</p>
+              <div class="os-badge">Unix Nativo</div>
+            </div>
+
+            <!-- Linux -->
+            <div class="os-card" data-os="linux">
+              <div class="os-card-header">
+                <div class="os-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                </div>
+                <div class="check-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+              <h3>Linux, WSL2 & Termux</h3>
+              <p>Ubuntu, Debian, Fedora, Arch, WSL2 no Windows ou Termux no celular Android. Execução rápida via Bash.</p>
+              <div class="os-badge">Servidores & Dev</div>
+            </div>
+          </div>
+
+          <div class="btn-row" style="justify-content: flex-end;">
+            <button type="button" class="btn btn-primary" id="btnNext1">
+              <span>Avançar para Opções de Instalação</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- SCREEN 2: INSTALLATION -->
+        <section class="screen" id="screen-2">
+          <div class="screen-header">
+            <h2 id="installScreenTitle">Opções de Instalação</h2>
+            <p id="installScreenDesc">Você pode instalar o Hermes padrão, adicionar o aplicativo Hermes Desktop ou rodar pelo terminal:</p>
+          </div>
+
+          <div class="method-grid">
+            <!-- Modo 1: Hermes Padrão -->
+            <div class="method-card primary-method">
+              <h4>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan-laser);"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Opção 1: Hermes Agent Padrão (CLI + Gateways)
+              </h4>
+              <p>Instalação recomendada. Fornece o comando <code>hermes</code>, memória contínua, ferramentas autônomas e acesso a gateways (Telegram, Discord, etc.):</p>
+              
+              <div class="callout callout-cyan" style="margin: 0 0 12px 0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <div>
+                  No Windows: clique no botão abaixo para instalar com 1 clique, ou execute <strong style="color: #fff; font-family: var(--font-mono);">INSTALAR_WINDOWS.bat</strong> opção <strong style="color: var(--cyan-laser);">1</strong>.
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-primary btn-oneclick" onclick="triggerAction('install')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <span>Instalar Hermes Agent Agora (1-Clique)</span>
+              </button>
+            </div>
+
+            <!-- Modo 2: Hermes Desktop -->
+            <div class="method-card purple-method">
+              <h4>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--purple-uv);"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                Opção 2: Hermes Agent + Hermes Desktop
+              </h4>
+              <p>Compila e instala o novo aplicativo gráfico de mesa oficial da Nous Research, permitindo conversar com o Hermes em uma janela visual nativa.</p>
+
+              <div class="callout callout-purple" style="margin: 0 0 12px 0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <div>
+                  No Windows: clique no botão abaixo para instalar com 1 clique, ou abra <strong style="color: #fff; font-family: var(--font-mono);">INSTALAR_WINDOWS.bat</strong> opção <strong style="color: #c084fc;">2</strong>.
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-purple btn-oneclick" onclick="triggerAction('install-desktop')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                <span>Instalar Hermes Desktop (1-Clique)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Terminal Box com seletor Universal vs Local -->
+          <div class="terminal-box">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+              </div>
+              <div class="cmd-tabs">
+                <button type="button" class="cmd-tab-btn active" id="tabCmdUniversal" onclick="setCmdMode('universal')">Comando Universal Oficial (Recomendado)</button>
+                <button type="button" class="cmd-tab-btn" id="tabCmdLocal" onclick="setCmdMode('local')">Script Local Desta Pasta</button>
+              </div>
+              <button type="button" class="btn btn-copy" onclick="copyCommand('terminalCmdCode')">Copiar</button>
+            </div>
+            <div class="terminal-body">
+              <span class="terminal-prompt">$</span><span id="terminalCmdCode">powershell -ExecutionPolicy Bypass -Command "irm https://hermes-agent.nousresearch.com/install.ps1 | iex"</span>
+            </div>
+          </div>
+
+          <div class="btn-row" style="justify-content: space-between;">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              <span>Voltar</span>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="goToStep(3)">
+              <span>Conhecer o Hermes Web Dashboard</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- SCREEN 3: WEB DASHBOARD -->
+        <section class="screen" id="screen-3">
+          <div class="screen-header">
+            <h2>Hermes Web Dashboard (Painel de Controle)</h2>
+            <p>Um painel visual completo no navegador para gerenciar seu agente sem precisar do terminal.</p>
+          </div>
+
+          <div class="method-grid">
+            <div class="method-card primary-method">
+              <h4>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan-laser);"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                O que o Web Dashboard oferece?
+              </h4>
+              <ul style="padding-left: 20px; color: var(--text-muted); font-size: 14px; display: flex; flex-direction: column; gap: 8px;">
+                <li><strong>Histórico de Sessões:</strong> Navegue pelas conversas anteriores de forma organizada.</li>
+                <li><strong>Editor de Memórias & Persona:</strong> Edite o <code>SOUL.md</code>, variáveis <code>.env</code> e configurações com um clique.</li>
+                <li><strong>Habilidades & Ferramentas MCP:</strong> Gerencie servidores de ferramentas e automações agendadas (cron).</li>
+                <li><strong>Métricas & Tokens:</strong> Gráficos em tempo real de consumo e latência.</li>
+                <li><strong>Chat Web Integrado:</strong> Converse diretamente pela interface do navegador.</li>
+              </ul>
+            </div>
+
+            <div class="method-card purple-method">
+              <h4>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--purple-uv);"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Como Iniciar o Dashboard em 1 Clique
+              </h4>
+              <p>No Windows, você pode iniciar pelo menu do <strong style="color: #fff;">INSTALAR_WINDOWS.bat</strong> escolhendo a opção <strong style="color: var(--cyan-laser);">3</strong>, ou digitar no terminal:</p>
+
+              <div class="terminal-box" style="margin: 4px 0;">
+                <div class="terminal-header">
+                  <span class="terminal-title">Terminal</span>
+                  <button type="button" class="btn btn-copy" onclick="copyText('hermes dashboard')">Copiar</button>
+                </div>
+                <div class="terminal-body"><span class="terminal-prompt">$</span>hermes dashboard</div>
+              </div>
+
+              <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 12px;">O servidor subirá em <code style="color: var(--cyan-laser);">http://127.0.0.1:9119</code> e abrirá automaticamente no seu navegador padrão.</p>
+
+              <button type="button" class="btn btn-primary btn-oneclick" style="width: 100%;" onclick="triggerAction('dashboard')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <span>Iniciar Web Dashboard Agora (1-Clique)</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="callout callout-cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <div>
+              <strong>Controle Total do Operador:</strong> O dashboard roda 100% local no seu computador na porta 9119. Nenhum dado do seu agente é transmitido para servidores de terceiros.
+            </div>
+          </div>
+
+          <div class="btn-row" style="justify-content: space-between;">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(2)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              <span>Voltar</span>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="goToStep(4)">
+              <span>Configurar Provedores e Modelos</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- SCREEN 4: CONFIGURATION (hermes setup / hermes model) -->
+        <section class="screen" id="screen-4">
+          <div class="screen-header">
+            <h2>Configuração do Agente & Provedor LLM</h2>
+            <p>O Hermes Agent precisa de uma chave de inteligência artificial para pensar e agir. A Nous Research simplificou o processo no assistente unificado <code>hermes setup</code>.</p>
+          </div>
+
+          <div class="step-list">
+            <!-- Passo 1 -->
+            <div class="step-item">
+              <div class="step-badge-num">1</div>
+              <div class="step-info">
+                <h4>Execute o Assistente de Configuração</h4>
+                <p>Abra um <strong>novo terminal</strong> (PowerShell no Windows ou Terminal no Mac/Linux) e execute:</p>
+                <div class="terminal-box" style="margin: 10px 0;">
+                  <div class="terminal-header">
+                    <span class="terminal-title">Terminal</span>
+                    <button type="button" class="btn btn-copy" onclick="copyText('hermes setup')">Copiar</button>
+                  </div>
+                  <div class="terminal-body"><span class="terminal-prompt">$</span>hermes setup</div>
+                </div>
+                <p style="font-size: 13.5px; margin-bottom: 12px;">O assistente interativo vai perguntar qual provedor você quer usar (OpenRouter, OpenAI, Anthropic, MiniMax ou modelo local) e solicitar sua chave de API.</p>
+
+                <button type="button" class="btn btn-purple btn-oneclick" onclick="triggerAction('setup')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                  <span>Abrir Assistente hermes setup (1-Clique)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Passo 2 -->
+            <div class="step-item">
+              <div class="step-badge-num">2</div>
+              <div class="step-info">
+                <h4>Alternância Rápida de Modelos (Opcional)</h4>
+                <p>Se você já configurou e deseja apenas trocar de modelo ou testar outro provedor a qualquer momento:</p>
+                <div class="terminal-box" style="margin: 10px 0;">
+                  <div class="terminal-header">
+                    <span class="terminal-title">Terminal</span>
+                    <button type="button" class="btn btn-copy" onclick="copyText('hermes model')">Copiar</button>
+                  </div>
+                  <div class="terminal-body"><span class="terminal-prompt">$</span>hermes model</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Passo 3 -->
+            <div class="step-item">
+              <div class="step-badge-num">3</div>
+              <div class="step-info">
+                <h4>Fazer o Primeiro Teste no Terminal</h4>
+                <p>Inicie a conversa direta com seu agente no terminal:</p>
+                <div class="terminal-box" style="margin: 10px 0;">
+                  <div class="terminal-header">
+                    <span class="terminal-title">Terminal</span>
+                    <button type="button" class="btn btn-copy" onclick="copyText('hermes')">Copiar</button>
+                  </div>
+                  <div class="terminal-body"><span class="terminal-prompt">$</span>hermes</div>
+                </div>
+                <p style="font-size: 13.5px;">Quando ele responder, envie: <code style="color: var(--cyan-laser);">Oi, Hermes. Responda apenas: sistema funcionando.</code></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <div>
+              <strong>Recomendação Moreira Labs:</strong> O <strong>OpenRouter</strong> é o provedor mais flexível, permitindo alternar entre os modelos oficiais Nous Hermes 3, Claude 3.5 Sonnet, GPT-4o e Gemini com uma única chave.
+            </div>
+          </div>
+
+          <div class="btn-row" style="justify-content: space-between;">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(3)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              <span>Voltar</span>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="goToStep(5)">
+              <span>Configurar Telegram & Canais</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- SCREEN 5: TELEGRAM & GATEWAYS -->
+        <section class="screen" id="screen-5">
+          <div class="screen-header">
+            <h2>Conectar ao Telegram & Aplicativos de Mensagens</h2>
+            <p>O Hermes possui um <strong>Gateway Multicanal</strong> integrado. Você pode conversar com ele no seu celular pelo Telegram como se fosse um contato pessoal.</p>
+          </div>
+
+          <div class="step-list">
+            <!-- Passo 1: BotFather -->
+            <div class="step-item">
+              <div class="step-badge-num">1</div>
+              <div class="step-info">
+                <h4>Crie seu Bot Oficial no Telegram</h4>
+                <p>1. No aplicativo do Telegram, busque por <code style="color: var(--cyan-laser);">@BotFather</code>.<br>
+                2. Envie o comando <code style="color: var(--purple-uv);">/newbot</code>.<br>
+                3. Escolha o nome de exibição (ex.: <em>Hermes Moreira Labs</em>).<br>
+                4. Escolha um username terminando em bot (ex.: <em>hermes_moreira_bot</em>).<br>
+                5. Copie o <strong>Token HTTP API</strong> fornecido pelo BotFather.</p>
+              </div>
+            </div>
+
+            <!-- Passo 2: User ID -->
+            <div class="step-item">
+              <div class="step-badge-num">2</div>
+              <div class="step-info">
+                <h4>Descubra o seu ID Numérico de Segurança</h4>
+                <p>Para garantir que <strong>apenas você</strong> possa comandar seu agente e ninguém mais tenha acesso, o Hermes exige o seu ID numérico.<br>
+                No Telegram, abra o bot auxiliar <code style="color: var(--cyan-laser);">@userinfobot</code>, dê <code style="color: var(--purple-uv);">/start</code> e copie o número exibido em <strong>Id</strong>.</p>
+              </div>
+            </div>
+
+            <!-- Passo 3: Gateway Setup -->
+            <div class="step-item">
+              <div class="step-badge-num">3</div>
+              <div class="step-info">
+                <h4>Configure o Gateway no Terminal</h4>
+                <p>Execute o assistente de conexão:</p>
+                <div class="terminal-box" style="margin: 10px 0;">
+                  <div class="terminal-header">
+                    <span class="terminal-title">Terminal</span>
+                    <button type="button" class="btn btn-copy" onclick="copyText('hermes gateway setup')">Copiar</button>
+                  </div>
+                  <div class="terminal-body"><span class="terminal-prompt">$</span>hermes gateway setup</div>
+                </div>
+                <p style="font-size: 13.5px; margin-bottom: 12px;">Selecione <strong>Telegram</strong>, cole o token do BotFather e depois insira o seu ID numérico.</p>
+
+                <button type="button" class="btn btn-primary btn-oneclick" onclick="triggerAction('gateway')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  <span>Configurar Gateway Telegram (1-Clique)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Passo 4: Start Gateway -->
+            <div class="step-item">
+              <div class="step-badge-num">4</div>
+              <div class="step-info">
+                <h4>Inicie o Gateway de Comunicação</h4>
+                <p>Inicie o serviço de escuta em segundo plano:</p>
+                <div class="terminal-box" style="margin: 10px 0;">
+                  <div class="terminal-header">
+                    <span class="terminal-title">Terminal</span>
+                    <button type="button" class="btn btn-copy" onclick="copyText('hermes gateway start')">Copiar</button>
+                  </div>
+                  <div class="terminal-body"><span class="terminal-prompt">$</span>hermes gateway start</div>
+                </div>
+                <p style="font-size: 13.5px;">Pronto! Agora abra o Telegram e envie uma mensagem para o seu bot. Ele responderá imediatamente!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row" style="justify-content: space-between;">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(4)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              <span>Voltar</span>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="goToStep(6)">
+              <span>Diagnóstico & Solução de Dúvidas</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- SCREEN 6: DOCTOR & TROUBLESHOOTING -->
+        <section class="screen" id="screen-6">
+          <div class="screen-header">
+            <h2>Diagnóstico, Saúde & Solução de Problemas</h2>
+            <p>Se algo não funcionar como esperado, o Hermes possui ferramentas automáticas de verificação e reparo.</p>
+          </div>
+
+          <div class="method-grid">
+            <div class="method-card primary-method">
+              <h4>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan-laser);"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                Hermes Doctor (Diagnóstico de Saúde)
+              </h4>
+              <p>Verifica dependências, ambiente Python `uv`, chaves de API e permissões:</p>
+              <div class="terminal-box" style="margin: 8px 0;">
+                <div class="terminal-header">
+                  <span class="terminal-title">Terminal</span>
+                  <button type="button" class="btn btn-copy" onclick="copyText('hermes doctor')">Copiar</button>
+                </div>
+                <div class="terminal-body"><span class="terminal-prompt">$</span>hermes doctor</div>
+              </div>
+
+              <button type="button" class="btn btn-primary btn-oneclick" style="width: 100%;" onclick="triggerAction('doctor')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                <span>Executar Diagnóstico hermes doctor (1-Clique)</span>
+              </button>
+            </div>
+
+            <div class="method-card purple-method">
+              <h4>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--purple-uv);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Status do Gateway Telegram
+              </h4>
+              <p>Verifica se o bot está conectado e escutando mensagens:</p>
+              <div class="terminal-box" style="margin: 8px 0;">
+                <div class="terminal-header">
+                  <span class="terminal-title">Terminal</span>
+                  <button type="button" class="btn btn-copy" onclick="copyText('hermes gateway status')">Copiar</button>
+                </div>
+                <div class="terminal-body"><span class="terminal-prompt">$</span>hermes gateway status</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dúvidas Frequentes -->
+          <div style="margin-top: 24px;">
+            <h3 style="font-size: 19px; margin-bottom: 16px; color: var(--text-main);">Dúvidas Frequentes</h3>
+            
+            <div class="step-list">
+              <div class="step-item">
+                <div class="step-badge-num">?</div>
+                <div class="step-info">
+                  <h4>O comando "hermes" não é reconhecido no terminal</h4>
+                  <p>Isso acontece quando o terminal estava aberto antes da instalação. Basta <strong>fechar todas as janelas do terminal e abrir uma nova</strong>.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-badge-num">?</div>
+                <div class="step-info">
+                  <h4>Como manter o Telegram rodando 24 horas?</h4>
+                  <p>O comando <code style="color: var(--cyan-laser);">hermes gateway start</code> roda em background no Windows e Linux. Se o seu ambiente não tiver suporte a daemons (ex.: WSL2), rode <code style="color: var(--purple-uv);">hermes gateway run</code> mantendo o terminal ativo.</p>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-badge-num">?</div>
+                <div class="step-info">
+                  <h4>Onde ficam salvas as conversas e memórias?</h4>
+                  <p>Todos os dados do Hermes ficam salvos em <code style="color: var(--cyan-laser);">~/.hermes/</code> (ou <code>%LOCALAPPDATA%\hermes\</code> no Windows). Você pode fazer backup dessa pasta para manter todas as memórias e skills aprendidas.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row" style="justify-content: space-between;">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(5)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              <span>Voltar</span>
+            </button>
+            <button type="button" class="btn btn-purple" onclick="goToStep(1)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+              <span>Voltar ao Início</span>
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>Hermes Agent é um produto autônomo da <strong>Nous Research</strong> • Easy Installer por <strong>Daniel Moreira (Moreira Labs)</strong></p>
+      <div class="credit-badge">
+        <span>Desenvolvido com carinho por <strong>Daniel Moreira</strong></span>
+        <span>•</span>
+        <a href="https://instagram.com/moreiralabs" target="_blank" rel="noopener">Instagram @moreiralabs</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="copyToast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toastMsg">Comando copiado para a área de transferência!</span>
+  </div>
+
+  <script>
+    // COMANDOS POR PLATAFORMA (OFICIAL 2026 & LOCAL)
+    const platformCommands = {
+      windows: {
+        name: "Windows 10 / 11",
+        universal: 'powershell -ExecutionPolicy Bypass -Command "irm https://hermes-agent.nousresearch.com/install.ps1 | iex"',
+        local: 'powershell -ExecutionPolicy Bypass -File ".\_motor\install-hermes-easy.ps1"'
+      },
+      macos: {
+        name: "macOS (Apple Silicon / Intel)",
+        universal: 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash',
+        local: 'chmod +x ./INSTALAR_MAC.command && ./INSTALAR_MAC.command'
+      },
+      linux: {
+        name: "Linux / WSL2 / Termux",
+        universal: 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash',
+        local: 'chmod +x ./INSTALAR_LINUX.sh && ./INSTALAR_LINUX.sh'
+      }
+    };
+
+    let selectedOs = "windows";
+    let currentCmdMode = "universal";
+    let currentStep = 1;
+    let isAppMode = false;
+
+    // DETECÇÃO AUTOMÁTICA DE SO
+    function detectSystem() {
+      const ua = (navigator.userAgent || navigator.platform || "").toLowerCase();
+      if (ua.includes("win")) return "windows";
+      if (ua.includes("mac")) return "macos";
+      if (ua.includes("linux") || ua.includes("android")) return "linux";
+      return "windows";
+    }
+
+    function updateOsSelection(os) {
+      selectedOs = os;
+      const data = platformCommands[os];
+
+      document.querySelectorAll(".os-card").forEach(card => {
+        card.classList.toggle("selected", card.dataset.os === os);
+      });
+
+      const detectedEl = document.getElementById("detectedOsName");
+      if (detectedEl) detectedEl.textContent = data.name;
+
+      const titleEl = document.getElementById("installScreenTitle");
+      if (titleEl) titleEl.textContent = "Opções de Instalação no " + data.name;
+
+      updateCommandDisplay();
+    }
+
+    function setCmdMode(mode) {
+      currentCmdMode = mode;
+      const tabUniversal = document.getElementById("tabCmdUniversal");
+      const tabLocal = document.getElementById("tabCmdLocal");
+      if (tabUniversal) tabUniversal.classList.toggle("active", mode === "universal");
+      if (tabLocal) tabLocal.classList.toggle("active", mode === "local");
+      updateCommandDisplay();
+    }
+
+    function updateCommandDisplay() {
+      const data = platformCommands[selectedOs];
+      const cmdCodeEl = document.getElementById("terminalCmdCode");
+      if (cmdCodeEl && data) {
+        cmdCodeEl.textContent = (currentCmdMode === "universal") ? data.universal : data.local;
+      }
+    }
+
+    // NAVEGAÇÃO DE PASSOS
+    function goToStep(step) {
+      currentStep = step;
+
+      document.querySelectorAll(".step-btn").forEach(btn => {
+        const btnStep = parseInt(btn.dataset.step, 10);
+        btn.classList.toggle("active", btnStep === step);
+        btn.classList.toggle("completed", btnStep < step);
+      });
+
+      document.querySelectorAll(".screen").forEach(scr => scr.classList.remove("active"));
+      const activeScreen = document.getElementById("screen-" + step);
+      if (activeScreen) activeScreen.classList.add("active");
+
+      window.scrollTo({ top: document.querySelector(".wizard-card").offsetTop - 40, behavior: "smooth" });
+    }
+
+    // INTEGRAÇÃO COM APP PORTÁTIL & 1-CLIQUE
+    let apiBase = "";
+
+    async function checkAppMode() {
+      // 1. Se carregou via http/https (ex: http://127.0.0.1:19284)
+      if (window.location.protocol.startsWith("http")) {
+        try {
+          const res = await fetch("/api/status", { cache: "no-cache" });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.appMode) {
+              enableAppMode("");
+              return;
+            }
+          }
+        } catch (_) {}
+      }
+
+      // 2. Se carregou via file:/// ou porta dinamica, sonda portas locais
+      const candidatePorts = [19284, 19285, 19286, 19287, 19288];
+      for (let i = 0; i < candidatePorts.length; i++) {
+        const p = candidatePorts[i];
+        try {
+          const res = await fetch("http://127.0.0.1:" + p + "/api/status", { cache: "no-cache" });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.appMode) {
+              enableAppMode("http://127.0.0.1:" + p);
+              return;
+            }
+          }
+        } catch (_) {}
+      }
+
+      isAppMode = false;
+    }
+
+    function enableAppMode(base) {
+      isAppMode = true;
+      apiBase = base;
+      const badge = document.getElementById("appModeBadge");
+      if (badge) badge.style.display = "inline-flex";
+
+      // Envia Heartbeat a cada 2.5s para manter o servidor executavel ativo
+      setInterval(() => {
+        fetch(apiBase + "/api/heartbeat", { cache: "no-cache" }).catch(() => {});
+      }, 2500);
+
+      // Desliga o servidor de forma limpa ao fechar a janela
+      window.addEventListener("beforeunload", () => {
+        try {
+          navigator.sendBeacon(apiBase + "/api/exit");
+        } catch (_) {}
+      });
+    }
+
+    async function triggerAction(action) {
+      if (!isAppMode) {
+        showToast("Abra pelo aplicativo 'Hermes Easy Installer.exe' para usar as ações com 1-Clique!");
+        return;
+      }
+      try {
+        showToast("Iniciando ação no PowerShell... Acompanhe na janela aberta!");
+        const res = await fetch(apiBase + "/api/run?action=" + encodeURIComponent(action), { cache: "no-cache" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) {
+            showToast("✅ PowerShell iniciado com sucesso! Acompanhe o processo na janela.");
+          } else {
+            showToast("Erro ao executar: " + (data.error || "Desconhecido"));
+          }
+        } else {
+          showToast("Erro retornado pelo servidor: " + res.status);
+        }
+      } catch (err) {
+        showToast("Falha ao se comunicar com o aplicativo: " + err.message);
+      }
+    }
+
+    // CLIPBOARD E TOAST
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          showToast("Comando copiado para a área de transferência!");
+          return;
+        }
+      } catch (_) {}
+
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      try {
+        document.execCommand("copy");
+        showToast("Comando copiado para a área de transferência!");
+      } catch (err) {
+        showToast("Selecione e copie manualmente o comando.");
+      }
+      document.body.removeChild(area);
+    }
+
+    function copyCommand(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) copyText(el.textContent.trim());
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("copyToast");
+      const msgEl = document.getElementById("toastMsg");
+      msgEl.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => { toast.classList.remove("show"); }, 3000);
+    }
+
+    // EVENT LISTENERS
+    document.querySelectorAll(".os-card").forEach(card => {
+      card.addEventListener("click", () => {
+        updateOsSelection(card.dataset.os);
+      });
+    });
+
+    document.querySelectorAll(".step-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        goToStep(parseInt(btn.dataset.step, 10));
+      });
+    });
+
+    const btnNext1 = document.getElementById("btnNext1");
+    if (btnNext1) btnNext1.addEventListener("click", () => goToStep(2));
+
+    // INICIALIZAÇÃO
+    window.addEventListener("DOMContentLoaded", () => {
+      const detected = detectSystem();
+      updateOsSelection(detected);
+      checkAppMode();
+    });
+  </script>
+</body>
+</html>

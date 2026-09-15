@@ -1,0 +1,16 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Scripts Shell/Bash (Linux e macOS) DEVEM ter quebra de linha LF
+*.sh text eol=lf
+*.command text eol=lf
+
+# Scripts Windows
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binarios e imagens
+*.exe binary
+*.ico binary
+*.jpg binary
+*.png binary

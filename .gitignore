@@ -1,0 +1,15 @@
+# Ambientes e caches locais
+_motor/.cache/
+*.log
+*.tmp
+*.obj
+*.pdb
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Perfis temporários de navegador
+HermesInstaller_EdgeAppProfile/
+HermesEasyInstallerEdgeProfile/
